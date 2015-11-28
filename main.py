@@ -9,7 +9,7 @@ import window                   # Terminal input and display.
 
 
 class HAL9000(object):
-    
+
     def __init__(self, terminal):
         """Constructor for the agent, stores references to systems and initializes internal memory.
         """
@@ -19,7 +19,7 @@ class HAL9000(object):
     def on_input(self, evt):
         """Called when user types anything in the terminal, connected via event.
         """
-        self.terminal.log("Good morning! This is HAL.", align='right', color='#00805A')
+        self.terminal.log("Hello, this is HAL.", align='right', color='#00805A')
 
     def on_command(self, evt):
         """Called when user types a command starting with `/` also done via events.
@@ -32,7 +32,7 @@ class HAL9000(object):
             self.terminal.log('\u2014 Now in the {}. \u2014'.format(evt.text[9:]), align='center', color='#404040')
 
         else:
-            self.terminal.log('Command `{}` unknown.'.format(evt.text), align='left', color='#ff3000')    
+            self.terminal.log('Command `{}` unknown.'.format(evt.text), align='left', color='#ff3000')
             self.terminal.log("I'm afraid I can't do that.", align='right', color='#00805A')
 
     def update(self, _):
@@ -42,7 +42,7 @@ class HAL9000(object):
 
 
 class Application(object):
-    
+
     def __init__(self):
         # Create and open the window for user interaction.
         self.window = window.TerminalWindow()
@@ -62,13 +62,13 @@ class Application(object):
         timer = vispy.app.Timer(interval=1.0)
         timer.connect(self.agent.update)
         timer.start()
-        
+
         vispy.app.run()
 
 
 if __name__ == "__main__":
     vispy.set_log_level('WARNING')
     vispy.use(app='glfw')
-    
+
     app = Application()
     app.run()
