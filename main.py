@@ -4,7 +4,6 @@
 #
 
 import vispy                    # Main application support.
-
 import window                   # Terminal input and display.
 
 import nltk.chat
@@ -26,18 +25,14 @@ class HAL9000(object):
           "Can you still communicate?"])
     ]
 
-    fresh = True
-    greeting = "Hello, this is HAL."
-
-    location = "unknown"
-
-    chatbot = nltk.chat.Chat(AGENT_RESPONSES, nltk.chat.util.reflections)
-
     def __init__(self, terminal):
         """Constructor for the agent, stores references to systems and initializes internal memory.
         """
         self.terminal = terminal
         self.location = 'unknown'
+        self.fresh = True
+        self.greeting = "Hello, this is HAL."
+        self.chatbot = nltk.chat.Chat(self.AGENT_RESPONSES, nltk.chat.util.reflections)
 
     def on_input(self, evt):
         """Called when user types anything in the terminal, connected via event.
