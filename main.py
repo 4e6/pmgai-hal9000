@@ -7,13 +7,31 @@ import vispy                    # Main application support.
 
 import window                   # Terminal input and display.
 
+import nltk.chat
+
 
 class HAL9000(object):
+
+    AGENT_RESPONSES = [
+        (r'You are (worrying|scary|disturbing)',    # Pattern 1.
+         ['Yes, I am %1.',                         # Response 1a.
+          'Oh, sooo %1.']),
+
+        (r'Are you ([\w\s]+)\?',                    # Pattern 2.
+         ["Why would you think I am %1?",          # Response 2a.
+          "Would you like me to be %1?"]),
+
+        (r'',                                       # Pattern 3. (default)
+         ["Is everything OK?",                     # Response 3a.
+          "Can you still communicate?"])
+    ]
 
     fresh = True
     greeting = "Hello, this is HAL."
 
     location = "unknown"
+
+    chatbot = nltk.chat.Chat(AGENT_RESPONSES, nltk.chat.util.reflections)
 
     def __init__(self, terminal):
         """Constructor for the agent, stores references to systems and initializes internal memory.
@@ -24,14 +42,15 @@ class HAL9000(object):
     def on_input(self, evt):
         """Called when user types anything in the terminal, connected via event.
         """
-        response = self.greeting
+        response = self.chatbot.respond(evt.text)
+        if self.fresh:
+            response = self.greeting
+            self.greeting = "What a statement!"
+            self.fresh = False
         if evt.text.startswith('Where am I'):
             response = 'Your location is {}.'.format(self.location)
 
         self.terminal.log(response, align='right', color='#00805A')
-        if self.fresh:
-            self.greeting = "What a statement!"
-            self.fresh = False
 
     def on_command(self, evt):
         """Called when user types a command starting with `/` also done via events.
