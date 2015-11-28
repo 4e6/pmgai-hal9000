@@ -10,6 +10,11 @@ import window                   # Terminal input and display.
 
 class HAL9000(object):
 
+    fresh = True
+    greeting = "Hello, this is HAL."
+
+    location = "unknown"
+
     def __init__(self, terminal):
         """Constructor for the agent, stores references to systems and initializes internal memory.
         """
@@ -19,7 +24,14 @@ class HAL9000(object):
     def on_input(self, evt):
         """Called when user types anything in the terminal, connected via event.
         """
-        self.terminal.log("Hello, this is HAL.", align='right', color='#00805A')
+        response = self.greeting
+        if evt.text.startswith('Where am I'):
+            response = 'Your location is {}.'.format(self.location)
+
+        self.terminal.log(response, align='right', color='#00805A')
+        if self.fresh:
+            self.greeting = "What a statement!"
+            self.fresh = False
 
     def on_command(self, evt):
         """Called when user types a command starting with `/` also done via events.
@@ -28,8 +40,9 @@ class HAL9000(object):
             vispy.app.quit()
 
         elif evt.text.startswith('relocate'):
+            self.location = evt.text[9:]
             self.terminal.log('', align='center', color='#404040')
-            self.terminal.log('\u2014 Now in the {}. \u2014'.format(evt.text[9:]), align='center', color='#404040')
+            self.terminal.log('\u2014 Now in the {}. \u2014'.format(self.location), align='center', color='#404040')
 
         else:
             self.terminal.log('Command `{}` unknown.'.format(evt.text), align='left', color='#ff3000')
